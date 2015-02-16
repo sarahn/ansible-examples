@@ -1,0 +1,51 @@
+- hosts: annoying_rootmail
+  tasks:
+    - include: include/redhat.yml
+      when: ansible_os_family == 'RedHat'
+
+    - include: include/debian.yml
+      when: ansible_os_family == 'Debian'
+
+  handlers:
+    - name: restart sendmail
+      service: name=sendmail state=restarted
+
+- hosts: annoying_rootmail
+  gather_facts: False
+  tasks:
+    - name: enable sendmail
+      service: name=sendmail enabled=yes state=started
+
+    - name: blacklist pcspkr
+      kernel_blacklist: name=pcspkr state=present blacklist_file=/etc/modprobe.d/blacklist.conf
+
+    - name: remove pcspkr module
+      modprobe: name=pcspkr state=absent
+
+    - name: add snd-pcsp
+      modprobe: name=snd-pcsp state=present
+
+    - name: create local sound dir
+      file: name=/usr/local/share/sounds/ state=directory owner=root group=root
+
+    - name: create /etc/smrsh
+      file: name=/etc/smrsh state=directory owner=root group=root
+
+    - name: copy sound file
+      copy: src=files/annoying.wav dest=/usr/local/share/sounds/annoying.wav owner=root group=root mode=644
+
+    - name: generate annoying rootmail script
+      template: src=templates/annoying-rootmail.j2 dest=/usr/local/bin/annoying-rootmail owner=root group=root mode=755
+      register: result
+
+    - name: test volume
+      tags: audio
+      shell: amixer sset Master {{volume}} && aplay /usr/local/share/sounds/annoying.wav
+      when: result|changed
+
+    - name: create sendmail symlink
+      file: src=/usr/local/bin/annoying-rootmail dest=/etc/smrsh/annoying-rootmail state=link
+
+    - name: create root .forward
+      copy: content='|/etc/smrsh/annoying-rootmail,\\root' dest=/root/.forward owner=root group=root mode=644
+

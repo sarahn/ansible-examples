@@ -1,0 +1,15 @@
+Edit inventory to match your hosts.
+
+/tmp, /var, and /home are often mounted 'noexec'
+ansible needs a directory on an 'exec' mount.
+
+This playbook does the following: 
+* Creates a temporary directory with name '/ansible' 
+* Sets temporary directory permissions 770 for root:<wheel or sudo> 
+* Adds the login user to the group <wheel or sudo>
+
+Run this playbook with:
+ansible-playbook -i inventory [ -u user ] [ -K if sudo pass ] [ -k if ssh pass ] -v <platform>-bootstrap.yml
+
+Test with:
+ansible -i inventory '<hosts>' [ -u user ] [ -K if sudo pass ] [ -k if ssh pass ] -m setup

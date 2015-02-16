@@ -1,0 +1,56 @@
+PLAY [annoying_rootmail] ****************************************************** 
+
+GATHERING FACTS *************************************************************** 
+ok: [192.168.1.200]
+
+TASK: [redhat install sendmail] ****************************************************** 
+changed: [192.168.1.200] => {"changed": true, "msg": "", "rc": 0, "results": ["Loaded plugins: downloadonly, fastestmirror\nSetting up Install Process\nLoading mirror speeds from cached hostfile\n * base: repos.lax.quadranet.com\n * epel: mirror.prgmr.com\n * extras: mirror.keystealth.org\n * updates: centos.mirrors.hoobly.com\nResolving Dependencies\n--> Running transaction check\n---> Package sendmail.x86_64 0:8.14.4-8.el6 will be installed\n--> Finished Dependency Resolution\n\nDependencies Resolved\n\n================================================================================\n Package           Arch            Version                  Repository     Size\n================================================================================\nInstalling:\n sendmail          x86_64          8.14.4-8.el6             base          717 k\n\nTransaction Summary\n================================================================================\nInstall       1 Package(s)\n\nTotal download size: 717 k\nInstalled size: 1.5 M\nDownloading Packages:\nRunning rpm_check_debug\nRunning Transaction Test\nTransaction Test Succeeded\nRunning Transaction\n\r  Installing : sendmail-8.14.4-8.el6.x86_64                                 1/1 \n\r  Verifying  : sendmail-8.14.4-8.el6.x86_64                                 1/1 \n\nInstalled:\n  sendmail.x86_64 0:8.14.4-8.el6                                                \n\nComplete!\n"]}
+
+TASK: [redhat install mailx] ********************************************************* 
+ok: [192.168.1.200] => {"changed": false, "msg": "", "rc": 0, "results": ["mailx-12.4-8.el6_6.x86_64 providing mailx is already installed"]}
+
+TASK: [debian install sendmail] ****************************************************** 
+skipping: [192.168.1.200]
+
+TASK: [debian install mailx] ********************************************************* 
+skipping: [192.168.1.200]
+
+TASK: [debian add mail user to audio group] ****************************************** 
+skipping: [192.168.1.200]
+
+NOTIFIED: [restart sendmail] ************************************************** 
+changed: [192.168.1.200] => {"changed": true, "name": "sendmail", "state": "started"}
+
+PLAY [annoying_rootmail] ****************************************************** 
+
+GATHERING FACTS *************************************************************** 
+ok: [192.168.1.200]
+
+TASK: [enable sendmail] ******************************************************* 
+ok: [192.168.1.200] => {"changed": false, "enabled": true, "name": "sendmail", "state": "started"}
+
+TASK: [blacklist pcspkr] ****************************************************** 
+ok: [192.168.1.200] => {"changed": false, "failed": false, "name": "pcspkr", "state": "present"}
+
+TASK: [fix up current modules] ************************************************ 
+ok: [192.168.1.200] => (item={'state': 'absent', 'name': 'pcspkr'}) => {"changed": false, "failed": false, "item": {"name": "pcspkr", "state": "absent"}, "name": "pcspkr", "params": "", "state": "absent"}
+ok: [192.168.1.200] => (item={'state': 'present', 'name': 'snd-pcsp'}) => {"changed": false, "failed": false, "item": {"name": "snd-pcsp", "state": "present"}, "name": "snd-pcsp", "params": "", "state": "present"}
+
+TASK: [create directories] **************************************************** 
+ok: [192.168.1.200] => (item=/usr/local/share/sounds/) => {"changed": false, "gid": 0, "group": "root", "item": "/usr/local/share/sounds/", "mode": "0755", "owner": "root", "path": "/usr/local/share/sounds/", "secontext": "system_u:object_r:usr_t:s0", "size": 4096, "state": "directory", "uid": 0}
+ok: [192.168.1.200] => (item=/etc/smrsh) => {"changed": false, "gid": 0, "group": "root", "item": "/etc/smrsh", "mode": "0755", "owner": "root", "path": "/etc/smrsh", "secontext": "system_u:object_r:etc_t:s0", "size": 4096, "state": "directory", "uid": 0}
+
+TASK: [copy sound file] ******************************************************* 
+ok: [192.168.1.200] => {"changed": false, "checksum": "69428eedeb407dfd632e33fec4c7e1c5db586b34", "dest": "/usr/local/share/sounds/annoying.wav", "gid": 0, "group": "root", "mode": "0644", "owner": "root", "path": "/usr/local/share/sounds/annoying.wav", "secontext": "system_u:object_r:usr_t:s0", "size": 384080, "state": "file", "uid": 0}
+
+TASK: [generate annoying rootmail script] ************************************* 
+ok: [192.168.1.200] => {"changed": false, "gid": 0, "group": "root", "mode": "0755", "owner": "root", "path": "/usr/local/bin/annoying-rootmail", "secontext": "system_u:object_r:bin_t:s0", "size": 203, "state": "file", "uid": 0}
+
+TASK: [create sendmail symlink] *********************************************** 
+ok: [192.168.1.200] => {"changed": false, "dest": "/etc/smrsh/annoying-rootmail", "gid": 0, "group": "root", "mode": "0777", "owner": "root", "secontext": "unconfined_u:object_r:etc_t:s0", "size": 32, "src": "/usr/local/bin/annoying-rootmail", "state": "link", "uid": 0}
+
+TASK: [create root .forward] ************************************************** 
+ok: [192.168.1.200] => {"changed": false, "checksum": "1fe72adc6c73d0fc0abd6bed507977dbac2b44b3", "dest": "/root/.forward", "gid": 0, "group": "root", "mode": "0644", "owner": "root", "path": "/root/.forward", "secontext": "system_u:object_r:mail_home_t:s0", "size": 35, "state": "file", "uid": 0}
+
+PLAY RECAP ******************************************************************** 
+192.168.1.200              : ok=13   changed=2    unreachable=0    failed=0 

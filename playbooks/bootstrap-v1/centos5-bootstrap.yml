@@ -1,0 +1,15 @@
+---
+- hosts: all
+  gather_facts: False
+  sudo: yes
+  tasks:
+    - name: create ansible directory
+      raw: mkdir -p /ansible
+    - name: chmod ansible directory
+      raw: chmod 770 /ansible
+    - name: chown ansible directory
+      raw: chown root:wheel /ansible
+    - name: add current user to sudo group
+      raw: /usr/sbin/usermod -aG wheel $SUDO_USER
+    - name: install python-simplejson
+      raw: yum -y install python-simplejson

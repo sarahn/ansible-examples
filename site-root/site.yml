@@ -1,0 +1,4 @@
+- hosts: dnsmasq
+  sudo: yes
+  roles:
+    - debops.dnsmasq

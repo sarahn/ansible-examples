@@ -1,0 +1,13 @@
+---
+- hosts: all
+  gather_facts: False
+  sudo: yes
+  tasks:
+    - name: create ansible directory
+      raw: mkdir -p /ansible
+    - name: chmod ansible directory
+      raw: chmod 770 /ansible
+    - name: chown ansible directory
+      raw: chown root:sudo /ansible
+    - name: add current user to sudo group
+      raw: /usr/sbin/usermod -aG sudo $SUDO_USER

@@ -1,0 +1,6 @@
+    - name: redhat install mailx
+      yum: name=mailx state=installed
+
+    - name: redhat install sendmail
+      yum: name=sendmail state=latest
+      notify: restart sendmail

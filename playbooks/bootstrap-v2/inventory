@@ -1,0 +1,21 @@
+[debian]
+localhost ansible_connection=local tmpdir=/var/ansible
+192.168.1.1
+
+[debian:vars]
+sudo_group=sudo
+
+[redhat:children]
+centos5
+selinux
+
+[redhat:vars]
+sudo_group=wheel
+
+[selinux]
+172.16.10.133
+
+[centos5]
+
+[all:vars]
+tmpdir=/ansible/

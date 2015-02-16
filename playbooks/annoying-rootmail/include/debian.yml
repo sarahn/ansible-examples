@@ -1,0 +1,9 @@
+    - name: debian install sendmail
+      apt: name=sendmail state=latest
+    
+    - name: debian install mailx
+      apt: name=heirloom-mailx state=installed
+    
+    - name: debian add mail user to audio group
+      user: name=mail groups=audio
+    

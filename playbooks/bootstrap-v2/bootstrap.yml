@@ -1,0 +1,27 @@
+---
+- hosts: selinux
+  gather_facts: False
+  sudo: yes
+  tasks:
+    - name: install libselinux-python
+      raw: yum -y install libselinux-python
+
+- hosts: all
+  gather_facts: False
+  sudo: yes
+  tasks:
+    - name: create ansible directory
+      raw: mkdir -p {{tmpdir}}
+    - name: chmod ansible directory
+      raw: chmod 770 {{tmpdir}}
+    - name: chown ansible directory
+      raw: chown root:{{sudo_group}} {{tmpdir}}
+    - name: add current user to sudo group
+      raw: /usr/sbin/usermod -aG {{sudo_group}} $SUDO_USER
+
+- hosts: centos5
+  gather_facts: False
+  sudo: yes
+  tasks:
+    - name: install python-simplejson
+      raw: yum -y install python-simplejson

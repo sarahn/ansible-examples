@@ -1,0 +1,7 @@
+#!/bin/sh
+trap "exit 0" SIGINT SIGTERM
+message=$(cat -)
+echo "$message" >> /var/log/rootmail
+amixer sset Master {{volume}}
+(while true; do aplay /usr/local/share/sounds/annoying.wav; sleep 0.5; done) &
+exit 0

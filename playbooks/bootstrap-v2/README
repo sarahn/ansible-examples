@@ -1,0 +1,25 @@
+Edit inventory to match your hosts.
+
+/tmp, /var, and /home are often mounted 'noexec'
+ansible needs a directory on an 'exec' mount.
+
+This playbook does the following: 
+* Creates a temporary directory with default name '/ansible' 
+* Sets temporary directory permissions 770 for root:<wheel or sudo> 
+* Adds the login user to the group <wheel or sudo>
+
+Sudo permissions are required to run this playbook.
+
+The location of '/ansible' may be overridden with another directory by performing the following:
+
+* Add --extra-vars='tmpdir=/full/path/to/directory' to the command line
+
+To use this temporary directory for other playbooks, edit ansible.cfg to contain
+[defaults]
+remote_tmp = /full/path/to/directory
+
+Run this playbook with:
+ansible-playbook [ -u user ] [ -K if sudo pass ] [ -k if ssh pass ] -v bootstrap.yml
+
+Test with:
+ansible 'all' [ -u user ] [ -K if sudo pass ] [ -k if ssh pass ] -vvv -m script -a 'scripts/test.sh' -t test
